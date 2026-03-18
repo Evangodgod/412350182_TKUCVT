@@ -21,14 +21,16 @@
 > *(請將你的截圖改名為 resource.png 放入 images 資料夾)*
 
 ## 四層驗收證據
-- [x] ① **Repository**：`/etc/apt/sources.list.d/docker.list` 已正確指向 download.docker.com。
-- [x] ② **Engine**：`docker-ce` 套件已安裝，版本與官方一致。
-- [x] ③ **Daemon**：`systemctl status docker` 為 `active (running)`。
-- [x] ④ **端到端**：`sudo docker run hello-world` 成功輸出 `Hello from Docker!`。
+- [x] ① **Repository**：驗證 Docker 來源清單
+  ![Repository](./images/01-repository.png)
+- [x] ② **Engine & Daemon**：驗證服務運行狀態
+  ![Daemon](./images/02-daemon.png)
+- [x] ③ **端到端**：運行 Hello World
+  ![Hello World](./images/03-hello-world.png)
 
 ## 容器操作紀錄
-- [x] **nginx**：執行 `sudo docker run -d -p 8080:80 nginx`。
-  - 驗證：`curl localhost:8080` 成功獲取 Nginx 歡迎頁面。
+- [x] **nginx**：成功啟動並取得回應
+  ![Nginx](./images/04-nginx.png)
 - [x] **alpine**：執行互動式容器 `sudo docker run -it --rm alpine /bin/sh`。
   - 驗證：容器具備獨立檔案系統，且共用 Guest OS Kernel。
 - [x] **映像列表**：`sudo docker images` 包含 nginx, alpine, hello-world。
