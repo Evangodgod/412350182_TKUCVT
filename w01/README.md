@@ -18,7 +18,6 @@
 
 > **觀測截圖**：
 > ![資源配置](./images/resource.png) 
-> *(請將你的截圖改名為 resource.png 放入 images 資料夾)*
 
 ## 四層驗收證據
 - [x] ① **Repository**：驗證 Docker 來源清單
