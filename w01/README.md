@@ -30,9 +30,13 @@
 ## 容器操作紀錄
 - [x] **nginx**：成功啟動並取得回應
   ![Nginx](./images/04-nginx.png)
-- [x] **alpine**：執行互動式容器 `sudo docker run -it --rm alpine /bin/sh`。
+
+- [x] **alpine**：執行互動式容器 `sudo docker run -it --rm alpine /bin/sh`
   - 驗證：容器具備獨立檔案系統，且共用 Guest OS Kernel。
-- [x] **映像列表**：`sudo docker images` 包含 nginx, alpine, hello-world。
+  ![Alpine](./images/05-alpine.png)
+
+- [x] **映像列表**：`sudo docker images` 包含 nginx, alpine, hello-world
+  ![Images](./images/06-images.png)
 
 ## Snapshot 清單
 | 名稱 | 建立時機 | 用途說明 | 建立前驗證 |
