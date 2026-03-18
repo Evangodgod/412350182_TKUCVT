@@ -4,8 +4,8 @@
 - **Host OS**: Windows 11 (Memory usage: 92%)
 - **VM 名稱**: vct-w01-412350182 (evan)
 - **Ubuntu 版本**: Ubuntu 24.04.4 LTS (Noble Numbat)
-- **Docker 版本**: 27.x.x (latest stable)
-- **Docker Compose 版本**: v2.x.x
+- **Docker 版本**: 29.3.0
+- **Docker Compose 版本**: v5.1.0
 
 ## VM 資源配置驗證
 
