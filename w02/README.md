@@ -78,29 +78,87 @@ ping: connect: 网络不可达
 
 | 項目 | 故障前 | 故障中 | 回復後 |
 |---|---|---|---|
-| server-b 介面狀態 | UP | DOWN | （填入） |
-| dev-a ping server-b | 成功 | 失敗 | （填入） |
-| dev-a SSH server-b | 成功 | 失敗 | （填入） |
+| server-b 介面狀態 | UP | DOWN | UP |
+| dev-a ping server-b | 成功 | 失敗 | 0% packet loss |
+| dev-a SSH server-b | 成功 | 失敗 | 成功登入 |
 
 ## 故障演練二：SSH 服務停止
 
 | 項目 | 故障前 | 故障中 | 回復後 |
 |---|---|---|---|
-| ss -tlnp grep :22 | 有監聽 | 無監聽 | （填入） |
-| dev-a ping server-b | 成功 | 成功 | （填入） |
-| dev-a SSH server-b | 成功 | Connection refused | （填入） |
+| ss -tlnp grep :22 | 有監聽 | 無監聽 | 有監聽 |
+| dev-a ping server-b | 成功 | 成功 | 成功 |
+| dev-a SSH server-b | 成功 | Connection refused | 成功登入 |
 
 ## 排錯順序
-（寫出你的 L2 → L3 → L4 排錯步驟與每層使用的命令）
+1. L2 介面層 (Data Link Layer)
+
+    檢查重點：網卡有沒有「插好」？介面有沒有啟動 (UP)？有沒有拿到正確網段的 IP？
+
+    檢查工具：ip address show
+
+    判斷標準：
+
+        如果介面顯示 DOWN，代表虛擬網線斷了（故障演練一的情況）。
+
+        如果 IP 不是 192.168.200.129(server-b)，代表 DHCP 沒抓到或網段選錯。
+
+2. L3 網路層 (Network Layer)
+
+    檢查重點：封包能不能到達對方？路由表 (Routing Table) 是否正確？
+
+    檢查工具：ip route show、ping 192.168.200.129
+
+    判斷標準：
+
+        如果 ping 不通，通常是 L2 壞了，或者是 L3 路由沒設好。
+
+        如果 ping 會通，代表兩台機器間的「路」是開著的，問題在更高層。
+
+3. L4+ 服務層 (Transport / Application Layer)
+
+    檢查重點：對方的服務有沒有「開門」？Port 22 是否正在監聽？防火牆有沒有擋住？
+
+    檢查工具：ss -tlnp、sudo ufw status、ssh -v
+
+    判斷標準：
+
+        如果 ping 通但 ssh 失敗（顯示 Connection refused），這就是故障演練二的情況：代表服務沒開（L4 故障）。
+
+        如果顯示 Permission denied，代表網路跟服務都對，是帳號密碼打錯了。
 
 ## 網路拓樸圖
 （嵌入或連結 network-diagram.png）
 
 ## 排錯紀錄
-- 症狀：
-- 診斷：（你首先查了什麼？用了哪個命令？）
-- 修正：（做了什麼改動？）
-- 驗證：（如何確認修正有效？）
+症狀：ssh server-b@192.168.200.129 顯示 Permission denied。
+
+診斷：先 ping 發現 L3 正常；再用 ss -tlnp 發現 server-b 的 Port 22 有開。判斷問題不在網路，而在認證。
+
+修正：發現 server-b 是主機名而非使用者帳號，改用 ssh evan@192.168.200.129。
+
+驗證：輸入密碼後成功登入。
 
 ## 設計決策
-（說明本週至少 1 個技術選擇與取捨，例如：為什麼 server-b 只設 Host-only 不給 NAT？）
+在本週的實驗架構中，我刻意將 server-b 設定為僅擁有 Host-only 網卡，而 dev-a 則維持雙網卡（NAT + Host-only），這基於以下三個核心考量：
+1. 最小權限原則與安全性 (Security & Attack Surface)
+
+在現實的企業生產環境中，後端伺服器（如資料庫或應用程式伺服器）通常不具備直接存取外部網路的權限。
+
+    決策：不給 server-b NAT 網卡，可以確保它不會被來自網際網路的惡意流量直接攻擊。
+
+    取捨：雖然這導致 server-b 無法直接執行 apt update（需臨時切換網卡或透過 dev-a 傳檔），但這能有效隔絕外部威脅。
+
+2. 模擬跳板機 (Bastion Host) 架構
+
+這是一種標準的工業級網路設計。
+
+    設計概念：dev-a 充當「跳板機」或「管理機」。管理員必須先連入具備外網能力的 dev-a，再經由內部私有網路（Host-only）跳轉至 server-b。
+
+    學習點：透過這種設計，我練習了如何跨越不同的網路平面進行系統管理，這比兩台 VM 都直接掛在 NAT 下更符合業界實務。
+
+3. 確保 IP 環境的穩定與純粹
+
+NAT 模式下的 IP 有時會隨著 VMware 的虛擬 DHCP 或 Host 端的網路環境變動而跑掉。
+
+    優點：Host-only 網段（VMnet1）是一個完全封閉的區域，IP 分配極其穩定，這對於 dev-a 透過 SSH 穩定控制 server-b 非常重要。我不需要擔心因為換了咖啡廳的 Wi-Fi，導致兩台 VM 的內網通訊中斷。
