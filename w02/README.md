@@ -10,8 +10,28 @@
 
 ## 連線驗證紀錄
 
-- [x] dev-a NAT 可上網：`ping google.com` 輸出
-- [x] 雙向互 ping 成功：貼上雙方 `ping` 輸出
+- [x] dev-a NAT 可上網：evan@dev-a:~$ ping -c 4 google.com
+PING google.com (142.250.196.206) 56(84) bytes of data.
+64 bytes from nctsaa-ac-in-f14.1e100.net (142.250.196.206): icmp_seq=1 ttl=128 time=3.18 ms
+64 bytes from nctsaa-ac-in-f14.1e100.net (142.250.196.206): icmp_seq=2 ttl=128 time=3.42 ms
+64 bytes from nctsaa-ac-in-f14.1e100.net (142.250.196.206): icmp_seq=3 ttl=128 time=3.63 ms
+64 bytes from nctsaa-ac-in-f14.1e100.net (142.250.196.206): icmp_seq=4 ttl=128 time=2.93 ms
+
+--- google.com ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+rtt min/avg/max/mdev = 2.928/3.288/3.627/0.261 ms
+- [x] 雙向互 ping 成功：evan@dev-a:~$ ping -c 4 192.168.200.129
+PING 192.168.200.129 (192.168.200.129) 56(84) bytes of data.
+64 bytes from 192.168.200.129: icmp_seq=1 ttl=64 time=0.753 ms
+64 bytes from 192.168.200.129: icmp_seq=2 ttl=64 time=0.974 ms
+64 bytes from 192.168.200.129: icmp_seq=3 ttl=64 time=0.980 ms
+64 bytes from 192.168.200.129: icmp_seq=4 ttl=64 time=0.395 ms
+
+--- 192.168.200.129 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3058ms
+rtt min/avg/max/mdev = 0.395/0.775/0.980/0.237 ms
+
+
 - [x] SSH 連線成功：`ssh <user>@<ip> "hostname"` 輸出
 - [x] SCP 傳檔成功：`cat /tmp/test-from-dev.txt` 在 server-b 上的輸出
 - [x] server-b 不能上網：`ping 8.8.8.8` 失敗輸出
