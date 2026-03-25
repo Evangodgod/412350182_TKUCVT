@@ -31,7 +31,16 @@ PING 192.168.200.129 (192.168.200.129) 56(84) bytes of data.
 4 packets transmitted, 4 received, 0% packet loss, time 3058ms
 rtt min/avg/max/mdev = 0.395/0.775/0.980/0.237 ms
 
+evan@server-b:~$ ping -c 4 192.168.200.128
+PING 192.168.200.128 (192.168.200.128) 56(84) bytes of data.
+64 bytes from 192.168.200.128: icmp_seq=1 ttl=64 time=1.23 ms
+64 bytes from 192.168.200.128: icmp_seq=2 ttl=64 time=0.796 ms
+64 bytes from 192.168.200.128: icmp_seq=3 ttl=64 time=0.435 ms
+64 bytes from 192.168.200.128: icmp_seq=4 ttl=64 time=0.586 ms
 
+--- 192.168.200.128 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3023ms
+rtt min/avg/max/mdev = 0.435/0.761/1.230/0.299 ms
 - [x] SSH 連線成功：`ssh <user>@<ip> "hostname"` 輸出
 - [x] SCP 傳檔成功：`cat /tmp/test-from-dev.txt` 在 server-b 上的輸出
 - [x] server-b 不能上網：`ping 8.8.8.8` 失敗輸出
