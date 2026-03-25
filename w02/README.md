@@ -4,9 +4,9 @@
 
 | VM | 網卡 | 模式 | IP | 用途 |
 |---|---|---|---|---|
-| dev-a | NIC 1 | NAT | （填入） | 上網 |
-| dev-a | NIC 2 | Host-only | （填入） | 內網互連 |
-| server-b | NIC 1 | Host-only | （填入） | 內網互連 |
+| dev-a | NIC 1 | NAT | 192.168.152.128 | 上網 |
+| dev-a | NIC 2 | Host-only | 192.168.200.128 | 內網互連 |
+| server-b | NIC 1 | Host-only | 192.168.200.129 | 內網互連 |
 
 ## 連線驗證紀錄
 
