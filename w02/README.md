@@ -10,11 +10,11 @@
 
 ## 連線驗證紀錄
 
-- [ ] dev-a NAT 可上網：`ping google.com` 輸出
-- [ ] 雙向互 ping 成功：貼上雙方 `ping` 輸出
-- [ ] SSH 連線成功：`ssh <user>@<ip> "hostname"` 輸出
-- [ ] SCP 傳檔成功：`cat /tmp/test-from-dev.txt` 在 server-b 上的輸出
-- [ ] server-b 不能上網：`ping 8.8.8.8` 失敗輸出
+- [x] dev-a NAT 可上網：`ping google.com` 輸出
+- [x] 雙向互 ping 成功：貼上雙方 `ping` 輸出
+- [x] SSH 連線成功：`ssh <user>@<ip> "hostname"` 輸出
+- [x] SCP 傳檔成功：`cat /tmp/test-from-dev.txt` 在 server-b 上的輸出
+- [x] server-b 不能上網：`ping 8.8.8.8` 失敗輸出
 
 ## 故障演練一：介面停用
 
