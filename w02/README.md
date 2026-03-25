@@ -64,7 +64,13 @@ Failed to connect to https://changelogs.ubuntu.com/meta-release-lts. Check your 
 Last login: Thu Mar 26 03:13:56 2026 from 192.168.200.128
 evan@server-b:~$ hostname
 server-b
-- [x] SCP 傳檔成功：`cat /tmp/test-from-dev.txt` 在 server-b 上的輸出
+- [x] SCP 傳檔成功：evan@dev-a:~$ echo "Hello from dev-a" > /tmp/test-from-dev.txt
+evan@dev-a:~$ scp /tmp/test-from-dev.txt evan@192.168.200.129:/tmp/
+evan@192.168.200.129's password: 
+test-from-dev.txt                             100%   17    11.1KB/s   00:00    
+evan@dev-a:~$ ssh evan@192.168.200.129 "cat /tmp/test-from-dev.txt"
+evan@192.168.200.129's password: 
+Hello from dev-a
 - [x] server-b 不能上網：`ping 8.8.8.8` 失敗輸出
 
 ## 故障演練一：介面停用
