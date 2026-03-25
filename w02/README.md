@@ -71,7 +71,8 @@ test-from-dev.txt                             100%   17    11.1KB/s   00:00
 evan@dev-a:~$ ssh evan@192.168.200.129 "cat /tmp/test-from-dev.txt"
 evan@192.168.200.129's password: 
 Hello from dev-a
-- [x] server-b 不能上網：`ping 8.8.8.8` 失敗輸出
+- [x] server-b 不能上網：evan@server-b:~$ ping 8.8.8.8
+ping: connect: 网络不可达
 
 ## 故障演練一：介面停用
 
