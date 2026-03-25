@@ -41,7 +41,29 @@ PING 192.168.200.128 (192.168.200.128) 56(84) bytes of data.
 --- 192.168.200.128 ping statistics ---
 4 packets transmitted, 4 received, 0% packet loss, time 3023ms
 rtt min/avg/max/mdev = 0.435/0.761/1.230/0.299 ms
-- [x] SSH 連線成功：`ssh <user>@<ip> "hostname"` 輸出
+- [x] SSH 連線成功：evan@dev-a:~$ # 格式：ssh 正確帳號@IP
+ssh evan@192.168.200.129
+evan@192.168.200.129's password: 
+Welcome to Ubuntu 24.04.4 LTS (GNU/Linux 6.17.0-19-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+扩展安全维护（ESM）Applications 未启用。
+
+37 更新可以立即应用。
+这些更新中有 23 个是标准安全更新。
+要查看这些附加更新，请运行：apt list --upgradable
+
+启用 ESM Apps 来获取未来的额外安全更新
+请参见 https://ubuntu.com/esm 或者运行: sudo pro status
+
+Failed to connect to https://changelogs.ubuntu.com/meta-release-lts. Check your Internet connection or proxy settings
+
+Last login: Thu Mar 26 03:13:56 2026 from 192.168.200.128
+evan@server-b:~$ hostname
+server-b
 - [x] SCP 傳檔成功：`cat /tmp/test-from-dev.txt` 在 server-b 上的輸出
 - [x] server-b 不能上網：`ping 8.8.8.8` 失敗輸出
 
