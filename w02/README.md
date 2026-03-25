@@ -128,6 +128,8 @@ ping: connect: 网络不可达
         如果顯示 Permission denied，代表網路跟服務都對，是帳號密碼打錯了。
 
 ## 網路拓樸圖
+<pre>
+<b>```mermaid</b>
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#dbeafe', 'edgeLabelBackground':'#ffffff', 'tertiaryColor': '#fff'}}}%%
 flowchart TB
     %% 外部網路與 Host
@@ -183,7 +185,8 @@ flowchart TB
     style DEVA_Ens33 fill:#bfdbfe,stroke:#3b82f6
     style DEVA_Ens37 fill:#bfdbfe,stroke:#3b82f6
     style SRVB_Ens37 fill:#c7d2fe,stroke:#6366f1
-
+<b>```</b>
+</pre>
 ## 排錯紀錄
 症狀：ssh server-b@192.168.200.129 顯示 Permission denied。
 
