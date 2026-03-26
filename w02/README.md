@@ -146,16 +146,24 @@ flowchart TB
         VMnet1_Adapter["Host Adapter<br/>IP: 192.168.200.1"]
     end
 
-    %% 虛擬機
-    subgraph DEVA["dev-a (evan)<br/>Role: Jump Host / Docker"]
+    %% 虛擬機 - dev-a (優化排版)
+    subgraph DEVA["dev-a (evan)"]
         direction TB
+        DEVA_Role["[ Role: Jump Host / Docker ]"]
         DEVA_Ens33["ens33 / NAT<br/>IP: 192.168.152.128"]
         DEVA_Ens37["ens37 / Host-only<br/>IP: 192.168.200.128"]
+        
+        %% 內部順序，確保 Role 在最上面
+        DEVA_Role --- DEVA_Ens33
     end
 
-    subgraph SRVB["server-b (evan)<br/>Role: Isolated Application"]
+    %% 虛擬機 - server-b (優化排版)
+    subgraph SRVB["server-b (evan)"]
         direction TB
+        SRVB_Role["[ Role: Isolated App ]"]
         SRVB_Ens37["ens37 / Host-only<br/>IP: 192.168.200.129"]
+        
+        SRVB_Role --- SRVB_Ens37
     end
 
     %% 連線流量
@@ -176,8 +184,15 @@ flowchart TB
     style VMnet1 fill:#fef3c7,stroke:#b45309,stroke-width:1px,stroke-dasharray: 5 5,color:#92400e
     style VMnet8_GW fill:#fecaca,stroke:#dc2626
     style VMnet1_Adapter fill:#fde68a,stroke:#d97706
+    
+    %% 強調虛擬機框框
     style DEVA fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e40af
     style SRVB fill:#e0e7ff,stroke:#4f46e5,stroke-width:2px,color:#3730a3
+    
+    %% 讓 Role 標籤變透明/無邊框，看起來像文字
+    style DEVA_Role fill:none,stroke:none,color:#1e40af,font-weight:bold
+    style SRVB_Role fill:none,stroke:none,color:#3730a3,font-weight:bold
+    
     style DEVA_Ens33 fill:#bfdbfe,stroke:#3b82f6
     style DEVA_Ens37 fill:#bfdbfe,stroke:#3b82f6
     style SRVB_Ens37 fill:#c7d2fe,stroke:#6366f1
