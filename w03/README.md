@@ -84,8 +84,7 @@ chmod 600 ~/.ssh/config
     3. 確認 `app` 與 `db` 位於 Host-only 網段，Windows 無法直連。
 - **修正**：
     1. 在 Windows 端手動建立 `~/.ssh/config` 檔案，明確定義 `User evan` 並設定 `ProxyJump bastion`。
-    2. 修正目標主機的 `~/.ssh/authorized_keys` 權限為 600，並加入 Windows 本機的 `id_ed25519.pub`。
-    3. 執行 `sudo systemctl mask sleep.target` 解決虛擬機頻繁黑屏休眠導致的斷聯問題。
+    2. 執行 `sudo systemctl mask sleep.target` 解決虛擬機頻繁黑屏休眠導致的斷聯問題。
 - **驗證**：在 Windows CMD 執行 `ssh app "hostname"`，可直接穿過跳板機回傳結果，無需手動輸入密碼。
 
 ## 設計決策
