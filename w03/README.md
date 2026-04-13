@@ -49,7 +49,8 @@ EOF
 
 chmod 600 ~/.ssh/config
 
-- 驗證輸出：（貼上連線成功的 hostname 輸出）
+- 驗證輸出：
+![驗證輸出](./images/hostnamecheck.png)
 - SCP 傳檔驗證：（貼上結果）
 
 ## 故障場景一：防火牆全封鎖
