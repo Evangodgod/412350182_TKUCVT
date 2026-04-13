@@ -12,7 +12,7 @@
 ## SSH 金鑰認證
 
 - 金鑰類型: ed25519
-- 公鑰部署到：（例：app 和 db 的 ~/.ssh/authorized_keys）
+- 公鑰部署到：~/.ssh/authorized_keys
 - 免密碼登入驗證：
   - bastion → app：（貼上輸出）
   - bastion → db：（貼上輸出）
