@@ -4,10 +4,10 @@
 
 | VM | 角色 | 網卡 | 模式 | IP | 開放埠與來源 |
 |---|---|---|---|---|---|
-| bastion | 跳板機 | NIC 1 | NAT | （填入） | SSH from any |
-| bastion | 跳板機 | NIC 2 | Host-only | （填入） | — |
-| app | 應用層 | NIC 1 | Host-only | （填入） | SSH from 192.168.56.0/24 |
-| db | 資料層 | NIC 1 | Host-only | （填入） | SSH from app + bastion |
+| bastion | 跳板機 | NIC 1 | NAT | 192.168.152.128 | SSH from any |
+| bastion | 跳板機 | NIC 2 | Host-only | 192.168.200.128 | — |
+| app | 應用層 | NIC 1 | Host-only | 192.168.200.129 | SSH from 192.168.56.0/24 |
+| db | 資料層 | NIC 1 | Host-only | 192.168.200.130 | SSH from app + bastion |
 
 ## SSH 金鑰認證
 
