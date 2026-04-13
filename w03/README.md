@@ -21,10 +21,10 @@
 ## 防火牆規則
 
 ### app 的 ufw status
-（貼上 `sudo ufw status verbose` 輸出）
+![app](./images/appufw.png)
 
 ### db 的 ufw status
-（貼上 `sudo ufw status verbose` 輸出）
+![db](./images/dbufw.png)
 
 ### 防火牆確實在擋的證據
 ![防火牆確實在擋](./images/fail8080.png)
