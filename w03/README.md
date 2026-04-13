@@ -30,7 +30,25 @@
 ![防火牆確實在擋](./images/fail8080.png)
 
 ## ProxyJump 跳板連線
-- 指令：（貼上你使用的 ssh -J 或 ssh config 設定）
+- 指令：evan@bastion:~$ mkdir -p ~/.ssh
+cat >> ~/.ssh/config << 'EOF'
+Host bastion
+    HostName 192.168.200.128       
+    User evan          
+
+Host app
+    HostName 192.168.200.129   
+    User evan      
+    ProxyJump bastion
+
+Host db
+    HostName 192.168.200.130  
+    User evan     
+    ProxyJump bastion
+EOF
+
+chmod 600 ~/.ssh/config
+
 - 驗證輸出：（貼上連線成功的 hostname 輸出）
 - SCP 傳檔驗證：（貼上結果）
 
