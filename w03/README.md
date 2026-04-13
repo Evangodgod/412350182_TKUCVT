@@ -14,8 +14,9 @@
 - 金鑰類型: ed25519
 - 公鑰部署到：~/.ssh/authorized_keys
 - 免密碼登入驗證：
-  - bastion → app：（貼上輸出）
-  - bastion → db：（貼上輸出）
+  - bastion → app：
+  - bastion → db：
+  - ![免密碼登入驗證](./images/ok.png)
 
 ## 防火牆規則
 
