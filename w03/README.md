@@ -27,7 +27,7 @@
 （貼上 `sudo ufw status verbose` 輸出）
 
 ### 防火牆確實在擋的證據
-（貼上步驟 13 的 curl 8080 失敗輸出）
+![防火牆確實在擋](./images/fail8080.png)
 
 ## ProxyJump 跳板連線
 - 指令：（貼上你使用的 ssh -J 或 ssh config 設定）
