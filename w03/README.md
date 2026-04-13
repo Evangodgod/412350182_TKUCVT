@@ -74,8 +74,45 @@ chmod 600 ~/.ssh/config
 * **Refused (被拒絕)**：對方有回應，但是說被拒絕。這代表網路通了（所以 Ping 會過），但「應用層」出事，目標主機的 SSH 服務 (sshd) 根本沒開。
 
 ## 網路拓樸圖
-![Network Diagram](/wanlootoolputu.png)
+```mermaid
+flowchart TB
+    subgraph HOST["Host OS（你的筆電）"]
+        HO_IF["VMnet1 Host-only\n192.168.200.1"]
+    end
 
+    subgraph BASTION["bastion（跳板機）"]
+        B_NAT["NIC 1: NAT\n192.168.152.128"]
+        B_HO["NIC 2: Host-only\n192.168.200.128"]
+        B_FW["ufw: 未啟用\n或 allow 22 from any"]
+    end
+
+    subgraph APP["app（應用層）"]
+        A_HO["NIC 1: Host-only\n192.168.200.129"]
+        A_FW["ufw: deny all\nallow 22 from 192.168.200.0/24"]
+    end
+
+    subgraph DB["db（資料層）"]
+        D_HO["NIC 1: Host-only\n192.168.200.130"]
+        D_FW["ufw: deny all\nallow 22 from app + bastion"]
+    end
+
+    B_NAT -->|"上網"| INET["Internet"]
+    HO_IF --- B_HO
+    HO_IF --- A_HO
+    HO_IF --- D_HO
+
+    B_HO -->|"SSH"| A_HO
+    B_HO -->|"SSH"| D_HO
+    A_HO -->|"SSH"| D_HO
+
+    HOST -->|"SSH ProxyJump"| B_HO
+
+    style BASTION fill:#fef3c7,stroke:#333
+    style APP fill:#dbeafe,stroke:#333
+    style DB fill:#e0e7ff,stroke:#333
+    style HOST fill:#d1fae5,stroke:#333
+    style INET fill:#f3f4f6,stroke:#333
+```
 ## 排錯紀錄
 - **症狀**：從 Windows 下指令 `ssh bastion` 或 `ssh app` 時一直要求輸入 `maste` 帳號的密碼，即便已經佈署過公鑰也無效。連線 `db` 時出現 `Timeout`。
 - **診斷**：
