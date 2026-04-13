@@ -22,6 +22,7 @@
 
 ### app 的 ufw status
 ![app](./images/appufw.png)
+
 -這裡我發現我搞錯了，後面把56.改成200.
 
 ### db 的 ufw status
