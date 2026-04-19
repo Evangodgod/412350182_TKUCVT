@@ -11,10 +11,10 @@
 
 ## Docker 系統資訊
 
-- Storage Driver：（貼上 `docker info` 中的值）
-- Docker Root Dir：（貼上 `docker info` 中的值）
-- 拉取映像前 /var/lib/docker/ 大小：（填入）
-- 拉取映像後 /var/lib/docker/ 大小：（填入）
+- Storage Driver：overlayfs
+- Docker Root Dir：/var/lib/docker
+- 拉取映像前 /var/lib/docker/ 大小：236K
+- 拉取映像後 /var/lib/docker/ 大小：240K
 
 ## 權限結構
 
