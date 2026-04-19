@@ -19,10 +19,10 @@
 ## 權限結構
 
 ### Docker Socket 權限解讀
-（貼上 `ls -la /var/run/docker.sock` 輸出，逐欄說明 owner/group/others 的權限）
+![app](./images/dockersock.png)
 
 ### 使用者群組
-（貼上 `id` 輸出，說明是否包含 docker 群組）
+![app](./images/defaultid.png)
 
 ### 安全意涵
 （用自己的話說明為什麼 docker group ≈ root，安全示範的觀察結果）
@@ -30,19 +30,25 @@
 ## 程序與服務管理
 
 ### systemctl status docker
-（貼上 `systemctl status docker` 輸出）
+![app](./images/status.png)
 
 ### journalctl 日誌分析
-（貼上 `journalctl -u docker --since "1 hour ago"` 的重點摘錄，說明看到什麼事件）
+![app](./images/journal.png)
+- 日誌分析摘要：
+
+    - 觀察到的事件：記錄了 image pulled (拉取 nginx 映像檔)、網路介面建立 sbJoin (容器啟動)、以及 received task-delete (容器執行完畢後被刪除)。
+
+    - 結論：日誌顯示 Docker Daemon 運作正常，且能正確響應 docker run --rm 指令的生命週期管理。當前使用的 Daemon PID 為 1198。
 
 ### CLI vs Daemon 差異
 （用自己的話說明兩者的差異，為什麼 `docker --version` 正常不代表 Docker 能用）
 
 ## 環境變數
 
-- $PATH：（貼上內容）
-- which docker：（填入路徑）
-- 容器內外環境變數差異觀察：（簡述）
+- $PATH：![app](./images/path.png)
+- which docker：![app](./images/which.png)
+- 容器內外環境變數差異觀察：![app](./images/matchinout.png)
+- （簡述）
 
 ## 故障場景一：停止 Docker Daemon
 
@@ -53,6 +59,10 @@
 | docker ps | 正常 | Cannot connect | （填入） |
 | ps aux grep dockerd | 有 process | （填入） | （填入） |
 
+![app](./images/p25before.png)
+![app](./images/p25now.png)
+![app](./images/p25after.png)
+
 ## 故障場景二：破壞 Socket 權限
 
 | 項目 | 故障前 | 故障中 | 回復後 |
@@ -61,6 +71,10 @@
 | docker ps（不加 sudo） | 正常 | permission denied | （填入） |
 | sudo docker ps | 正常 | （填入） | （填入） |
 | systemctl status docker | active | （填入） | （填入） |
+
+![app](./images/p30before.png)
+![app](./images/p30now.png)
+![app](./images/p30after.png)
 
 ## 錯誤訊息比較
 
