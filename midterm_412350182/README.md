@@ -57,6 +57,25 @@ evan@bastion:~$ ip -4 addr show
     inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
        valid_lft forever preferred_lft forever
 
+evan@app:~$ ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 00:0c:29:fb:02:07 brd ff:ff:ff:ff:ff:ff
+    altname enp2s1
+    inet 192.168.200.129/24 brd 192.168.200.255 scope global dynamic noprefixroute ens33
+       valid_lft 1361sec preferred_lft 1361sec
+    inet6 fe80::a58d:6eb6:a8c:4f27/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 8e:94:af:17:c2:16 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+
 
 ## 3. Part B：金鑰、ufw、ProxyJump
 | VM | 規則 | 目的 |
@@ -68,7 +87,7 @@ evan@bastion:~$ ip -4 addr show
 
 ## 4. Part C：Docker 服務
 ![dd](./screenshots/docker_running.png)
-
+![dd](./screenshots/docker_ok.png)
 ## 5. Part D：故障演練
 ### 故障 1：<F1/F2/F3 擇一>
 - 注入方式：
