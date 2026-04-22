@@ -94,19 +94,25 @@ evan@app:~$ ip addr
 - 故障前：![ssh](./screenshots/f3before.png)
 - 故障中：![ssh](./screenshots/f3now.png)
 - 回復後：![ssh](./screenshots/f3after.png)
-- 診斷推論：
+- 診斷推論：SSH 能連通證明網路層與傳輸層無礙，但執行容器指令失敗。透過 systemctl status 發現服務停止，這說明故障發生在服務層，不影響底層網路。
 
 ### 故障 2：<另一個>
 - 注入方式：sudo ip link set ens33 down
 - 故障前：![ssh](./screenshots/f1before.png)
 - 故障中：![ssh](./screenshots/f3now.png)
 - 回復後：![ssh](./screenshots/f3after.png)
-- 診斷推論：
+- 診斷推論：網路層直接斷裂，封包無法抵達目標主機。因為實體介面被關閉，OS 不再回應任何 L3 層級的請求，導致連線請求在 Host 端發生逾時 (timeout)。
 
 ### 症狀辨識（若選 F1+F2 必答）
 兩個都 timeout，我怎麼分？
+  兩個故障在 Host 端均呈現 timeout，但診斷方式如下：
+
+    先 Ping：若 ping 不通，問題通常在 L2/L3 (網路層)。這時應檢查 ip link 或路由表，因為封包根本找不到目的地。
+    
+    若 Ping 通但 SSH Timeout：則問題在 L4 (傳輸層/防火牆)。這時應使用 sudo ufw status 檢查，因為網路路徑是通的，但防火牆規則封鎖了連線，導致 TCP 三向交握無法完成。
 
 ## 6. 反思（200 字）
 這次做完，對「分層隔離」或「timeout 不等於壞了」的理解有什麼改變？
-
+    這次實作讓我對「連線失敗」背後的邏輯有了系統性的理解。過去我常誤以為 timeout 代表機器掛了，但在這次分層故障注入中，我學會將問題拆解為網路層、服務層與應用層。特別是透過      ProxyJump 建構跳板機後，我深刻體會到「最小暴露原則」對資安的重要性——App 被完全隔離在 Host-only 網段，僅能透過特定的跳板進行管理。這次的排錯練習證明了有效的診斷流程比      盲目重啟機器更有價值。當我們能從 ping 的反應、ss 監聽的連接埠，或是 journalctl 的日誌分析中找到蛛絲馬跡時，複雜的網路架構就不再令人恐懼。透過這種分層隔離的實驗，我現      在能更精準地判斷是網路路由被切斷，還是防火牆規則過於嚴苛，這對未來管理雲端環境將是極為關鍵的能力。
 ## 7. Bonus（選做）
+我沒有做
