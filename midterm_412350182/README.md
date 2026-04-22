@@ -67,7 +67,7 @@ evan@bastion:~$ ip -4 addr show
 ![ssh](./screenshots/ssh_success.png)
 
 ## 4. Part C：Docker 服務
-<systemctl status docker + curl 輸出>
+![dd](./screenshots/docker_running.png)
 
 ## 5. Part D：故障演練
 ### 故障 1：<F1/F2/F3 擇一>
