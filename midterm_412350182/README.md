@@ -91,16 +91,16 @@ evan@app:~$ ip addr
 ## 5. Part D：故障演練
 ### 故障 1：<F1/F2/F3 擇一>
 - 注入方式：sudo systemctl stop docker
-- 故障前：![ssh](./screenshots/ssh_success.png)
-- 故障中：
-- 回復後：
+- 故障前：![ssh](./screenshots/f3before.png)
+- 故障中：![ssh](./screenshots/f3now.png)
+- 回復後：![ssh](./screenshots/f3after.png)
 - 診斷推論：
 
 ### 故障 2：<另一個>
 - 注入方式：sudo ip link set ens33 down
-- 故障前：![ssh](./screenshots/ssh_success.png)
-- 故障中：
-- 回復後：
+- 故障前：![ssh](./screenshots/f1before.png)
+- 故障中：![ssh](./screenshots/f3now.png)
+- 回復後：![ssh](./screenshots/f3after.png)
 - 診斷推論：
 
 ### 症狀辨識（若選 F1+F2 必答）
