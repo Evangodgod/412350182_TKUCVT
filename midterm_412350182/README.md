@@ -59,7 +59,12 @@ evan@bastion:~$ ip -4 addr show
 
 
 ## 3. Part B：金鑰、ufw、ProxyJump
-<防火牆規則表 + ssh app 成功證據>
+| VM | 規則 | 目的 |
+|---|---|---|
+| bastion | ALLOW 22/tcp | 允許 Host 從外部進行管理連線 |
+| app | ALLOW FROM 192.168.200.10 TO ANY PORT 22 | 僅允許來自跳板機的 SSH 管理流量 |
+
+![ssh](./screenshots/ssh_success.png)
 
 ## 4. Part C：Docker 服務
 <systemctl status docker + curl 輸出>
