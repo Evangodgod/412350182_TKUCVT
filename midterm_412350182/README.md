@@ -99,8 +99,8 @@ evan@app:~$ ip addr
 ### 故障 2：<另一個>
 - 注入方式：sudo ip link set ens33 down
 - 故障前：![ssh](./screenshots/f1before.png)
-- 故障中：![ssh](./screenshots/f3now.png)
-- 回復後：![ssh](./screenshots/f3after.png)
+- 故障中：![ssh](./screenshots/f1now.png)
+- 回復後：![ssh](./screenshots/f1after.png)
 - 診斷推論：網路層直接斷裂，封包無法抵達目標主機。因為實體介面被關閉，OS 不再回應任何 L3 層級的請求，導致連線請求在 Host 端發生逾時 (timeout)。
 
 ### 症狀辨識（若選 F1+F2 必答）
