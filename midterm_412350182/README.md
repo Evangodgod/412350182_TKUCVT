@@ -90,14 +90,18 @@ evan@app:~$ ip addr
 ![dd](./screenshots/docker_ok.png)
 ## 5. Part D：故障演練
 ### 故障 1：<F1/F2/F3 擇一>
-- 注入方式：
-- 故障前：
+- 注入方式：sudo systemctl stop docker
+- 故障前：![ssh](./screenshots/ssh_success.png)
 - 故障中：
 - 回復後：
 - 診斷推論：
 
 ### 故障 2：<另一個>
-（同上）
+- 注入方式：sudo ip link set ens33 down
+- 故障前：![ssh](./screenshots/ssh_success.png)
+- 故障中：
+- 回復後：
+- 診斷推論：
 
 ### 症狀辨識（若選 F1+F2 必答）
 兩個都 timeout，我怎麼分？
