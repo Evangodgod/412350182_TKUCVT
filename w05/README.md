@@ -31,13 +31,13 @@
 ## Cgroups 實驗
 
 ### 容器內讀到的限制
-- memory.max：
-- cpu.max：
+- memory.max：268435456
+- cpu.max：50000 100000
 
 ### Host 端對照（用 `docker inspect -f '{{.HostConfig.CgroupParent}}'` 動態取得路徑）
-- memory.max：
-- cpu.max：
-- memory.current（執行時某一刻）：
+- memory.max：268435456
+- cpu.max：50000 100000
+- memory.current（執行時某一刻）：401408
 
 ### OOM 故障三階段
 | 項目 | 故障前 | 故障中（memory=32m + dd 200m）| 回復後（memory=256m）|
