@@ -2,10 +2,7 @@
 
 ## Docker 環境
 
-- Storage Driver：（貼上）
-- Cgroup Version：（貼上）
-- Cgroup Driver：（貼上）
-- Default Runtime：（貼上）
+![2](./screenshots/2.png)
 
 ## Namespace 觀察
 
