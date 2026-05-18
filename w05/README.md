@@ -25,6 +25,7 @@
 | user |4026531837|4026531837|一樣|
 ### 容器內 `ps aux` 輸出
 ![2](./screenshots/0510.png)
+
 （只看到幾支 process？為什麼？）
 
 ## Cgroups 實驗
