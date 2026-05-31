@@ -1,9 +1,15 @@
 # W06｜Docker Image 與 Dockerfile
 
 ## 映像組成
-- Layers 是什麼：（用自己的話寫）
-- Config 是什麼：（用自己的話寫）
-- Manifest 是什麼：（用自己的話寫）
+
+- **Layers 是什麼**：
+  就像是一片一片疊起來的**唯讀樂高積木**。在 Dockerfile 裡每執行一個指令（如 `RUN`、`COPY`），Docker 就會把產生的檔案變更打包成一層 Layer。這些 Layer 是唯讀且不可變的，底層一模一樣的積木可以被不同的映像檔同時共享，省下重複下載和佔用硬碟的時間。
+
+- **Config 是什麼**：
+  就是這個映像檔的**設定說明書**。它紀錄了這個映像檔的元數據（Metadata），包含環境變數（Env）、預設要執行的命令（Cmd/Entrypoint）、工作目錄（Workdir）、開出的通訊埠（Expose），以及這顆映像檔是由哪幾層 Layers 依序疊起來的歷史紀錄。
+
+- **Manifest 是什麼**：
+  就是映像檔的**清單索引（或者是出貨清單）**。當我們執行 `docker pull` 時，Docker 會最先下載這個 Manifest。它裡面明確記載了這款映像檔支援哪些 CPU 架構（例如 amd64、arm64），並指引 Docker 去哪裡把對應的 Config 檔案和那一整疊的 Layers 檔案給正確下載下來。
 
 ## python:3.12-slim inspect 摘錄
 - Config.Cmd：
@@ -29,7 +35,13 @@
 | v2 首次 build | 18.200s |
 | v2 改 app.py 後 rebuild | 3.301s |
 
-觀察（用自己的話寫）：為什麼 v2 的 rebuild 這麼快？
+### 觀察：為什麼 v2 的 rebuild 這麼快？
+
+因為 `v2` 利用了 **「Docker 快取機制（Cache Hit）」**。
+
+在 `v1` 的版本中，把程式碼 `COPY app/ .` 放在最上面，導致每次只要改一個字，那層 Layer 的快取就失效了，連帶逼迫它底下的 `RUN pip install` 每次都要花 16 秒重新下載 Flask 套件。
+
+而在 `v2` 中，把順序對調了,不常變動的 `requirements.txt` 提到上面先單獨執行 `pip install`。當 rebuild 時，Docker 發現相依清單根本沒變，就直接**秒過（顯示 CACHED）**，只有最下面複製程式碼的那一層花了不到 1 秒重新打包。這就是錯誤的指令排序與正確排序之間的巨大時間差距
 
 ## CMD vs ENTRYPOINT 實驗
 
@@ -111,10 +123,79 @@ builder stage 的那些重型 Layer，在建置（`docker build`）結束後，*
 這就是為什麼步驟 4 的傳輸容量會從 157.33 MB 直接暴跌剩下 **457 B** 的驚人差距,這項技術在實際企業開發中極其重要，能完美避免如 `node_modules/`、`.git/` 歷史紀錄或本地測試日誌等垃圾檔案弄髒映像檔，是保持 Docker 映像檔精實與高速建置的必備好習慣
 
 ## 排錯紀錄
-- 症狀：
-- 診斷：
-- 修正：
-- 驗證：
+
+- **症狀**：
+  在最終執行 `git push origin main` 準備交作業時，進度條跑到一半突然卡住，接著終端機噴出 `error: 无法倒回 rpc post 数据`、`RPC 失败。curl 65 Recv failure` 以及 `fatal: 远端意外挂断了` 的中斷報錯。
+
+- **診斷**：
+  因為在 Part F 的實驗中，我們為了測試 `.dockerignore` 的威力，故意在專案目錄下用 `dd` 指令建立了一個高達 **150 MB** 的巨型垃圾檔案 `dummy_garbage.bin`。
+  後來在執行 `git add w06/` 時，不小心把這個 150MB 的大魔王一起加進了 Git 的追蹤記憶中。GitHub 透過 HTTPS 限制了單次傳輸的緩衝區大小，當網路稍微延遲且檔案過大時，伺服器就會直接暴力斷開連線。
+
+- **修正**：
+  不需要去動網路快取設定，直接治本！執行以下 Git 撤回指令，把 150MB 的大垃圾從 Git 的暫存記憶中抹除（但保留在本機，不影響實驗紀錄）：
+  ```bash
+  git rm --cached w06/dummy_garbage.bin
+  git commit --amend --no-edit
 
 ## 設計決策
-（說明本週至少 1 個技術選擇與取捨，例如：為什麼 runtime 選 `python:3.12-slim` 而不是 `alpine`？）
+**技術取捨**：為什麼 runtime 階段選擇 python:3.12-slim 而不是 alpine？
+
+在 W06 的多階段建置（Multi-stage Build）中，最終的生產環境（Runtime）我們面臨了基礎映像檔（Base Image）的技術抉擇。雖然 alpine 映像檔以極度輕量（通常只有 5MB 左右）聞名，但本週我們依然決定選擇約 43MB 的 python:3.12-slim，原因與取捨如下：
+
+    避免 C 語言編譯相依性的地獄（glibc vs musl）：
+    python:3.12-slim 底層是基於 Debian Linux，使用的是標準的 glibc 函式庫；而 alpine 為了極致瘦身，使用的是輕量版的 musl libc。許多 Python 的高效能科學計算或網頁套件（例如未來可能用到的 NumPy, Pandas, 甚至部分密碼學套件），在編譯時都是針對 glibc 設計的。如果在 Alpine 上安裝，經常會因為找不到相依性而直接安裝失敗，迫使工程師要在 Dockerfile 裡手動裝上一整套 make, gcc 等重型工具，最後做出來的映像檔反而比 slim 還要胖。
+
+    維運安全性與穩定性取捨：
+    雖然 Alpine 體積小，但在生產環境中，部分底層 C 函式庫的行為差異可能會引發難以追查的記憶體錯誤（Segmentation Fault）或效能滑落。
+
+**最終決策**：
+我們選擇犧牲大約 30 多 MB 的磁碟空間換取極高的相容性與部署穩定度。透過 python:3.12-slim 搭配 Multi-stage build，最終做出來的 myapp:multi 體積（184 MB）已經非常精實，且能保證未來不管安裝任何複雜的 Python 擴充套件，都不會踩到 Alpine 的編譯地獄。
+
+### 🌐 網路選取之 Dockerfile 原始碼 (Node.js 多階段建置)
+
+```dockerfile
+# 第一階段：編譯環境 (Builder Stage)
+FROM node:20-alpine AS builder
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+# 第二階段：最終執行環境 (Runtime Stage)
+FROM node:20-alpine AS runner
+WORKDIR /usr/src/app
+ENV NODE_ENV=production
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/package.json ./package.json
+USER node
+EXPOSE 3000
+CMD ["node", "dist/main.js"]
+```
+
+## 核心優點分析
+
+    極致瘦身 (Multi-stage)：利用雙階段建置，在 builder 階段編譯完後，只將核心成品 dist 與 node_modules 搬移到 runner 階段，成功丟棄數百 MB 的編譯垃圾。
+
+    快取優化 (Cache Hit)：先 COPY package*.json 再執行 npm install。只要相依套件沒變，改原始碼 rebuild 時就能直接秒過快取，大幅縮短建置時間。
+
+    安全防護 (Non-root USER)：結尾使用 USER node 將容器權限從預設的最高權限 root 降級。即使容器被黑客攻破，也無法輕易控制宿主機系統，符合企業級安全規範。
+
+## 實戰排錯紀錄 (Troubleshooting)
+
+在 VMware 本地虛擬機實際對此 Dockerfile 進行 docker build 驗證時，踩到了以下兩個經典小坑並成功修復：
+
+   **坑1**：npm ci 報錯中斷
+
+        原因：原版程式碼使用 RUN npm ci，這要求目錄下必須有 package-lock.json 鎖定檔。因為是手動建立的極簡測試專案，缺少此檔案導致中斷。
+
+        修正：將指令改為更通用的 RUN npm install。
+
+   **坑2**：node_modules not found 報錯
+
+        原因：手動建立的測試 package.json 內容中，dependencies 為空 {}。npm 偵測到無套件需下載，故完全沒有生成 node_modules 資料夾，導致第二階段 COPY --from 找不到目標而崩潰。
+
+        修正：在 package.json 中手動加入一個標準網頁依賴套件 "express": "^4.19.2"，使資料夾順利生成。
+
+**最終結果**：成功排除以上故障，並在終端機順利印出 Bonus Node App Running! 執行結果，驗證開源 Dockerfile 設計完全可行。
