@@ -49,7 +49,9 @@ flowchart TD
 
 多容器控制採用 `compose.yaml` 進行宣告式管理。為解決傳統微服務架構中「資料庫尚未熱機完成，Web 端即因連線失敗而崩潰」的非同步啟動痛點，本專案利用 PostgreSQL 原生工具 `pg_isready` 實作主動式健康檢查（Healthcheck），並結合 `depends_on.condition: service_healthy` 機制，強迫 `app` 服務必須等待資料庫完全就緒後方可建立。
 
-![資料持久化三階段實驗結果](screenshots/volume-3-stages.png)
+![資料持久化三階段實驗結果](screenshots/1.png)
+![資料持久化三階段實驗結果](screenshots/2.png)
+![資料持久化三階段實驗結果](screenshots/3.png)
 
 ### 💡 核心問答：down vs down -v 的本質差異
 * **`docker compose down`**：屬於標準的環境關閉指令。它會停止並移除所有執行中的容器、釋放建立的虛擬網路（Network），但會**完整保留具名磁碟區（Named Volumes）**。這符合資料持久化原則，當環境重啟時，資料依舊萬歲。
